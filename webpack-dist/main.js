@@ -114,6 +114,7 @@
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
+/******/ 		
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
@@ -155,7 +156,10 @@
 /******/ 				scriptUrl = document.currentScript.src;
 /******/ 			if (!scriptUrl) {
 /******/ 				var scripts = document.getElementsByTagName("script");
-/******/ 				if(scripts.length) scriptUrl = scripts[scripts.length - 1].src
+/******/ 				if(scripts.length) {
+/******/ 					var i = scripts.length - 1;
+/******/ 					while (i > -1 && !scriptUrl) scriptUrl = scripts[i--].src;
+/******/ 				}
 /******/ 			}
 /******/ 		}
 /******/ 		// When supporting browsers where an automatic publicPath is not supported you must specify an output.publicPath manually via configuration
@@ -174,9 +178,20 @@
 /******/ 		
 /******/ 		var uniqueName = "rspack-repro";
 /******/ 		var loadCssChunkData = (target, link, chunkId) => {
-/******/ 			var data, token = "", token2, exports = {}, exportsWithId = [], exportsWithDashes = [], i = 0, cc = 1;
-/******/ 			try { if(!link) link = loadStylesheet(chunkId); data = link.sheet.cssRules; data = data[data.length - 1].style; } catch(e) { data = getComputedStyle(document.head); }
-/******/ 			data = data.getPropertyValue("--webpack-" + uniqueName + "-" + chunkId);
+/******/ 			var data, token = "", token2, exports = {}, exportsWithId = [], exportsWithDashes = [], name = "--webpack-" + uniqueName + "-" + chunkId, i = 0, cc = 1;
+/******/ 			try {
+/******/ 				if(!link) link = loadStylesheet(chunkId);
+/******/ 				var cssRules = link.sheet.cssRules || link.sheet.rules;
+/******/ 				var j = cssRules.length - 1;
+/******/ 				while(j > -1 && !data) {
+/******/ 					var style = cssRules[j--].style;
+/******/ 					if(!style) continue;
+/******/ 					data = style.getPropertyValue(name);
+/******/ 				}
+/******/ 			}catch(e){}
+/******/ 			if(!data) {
+/******/ 				data = getComputedStyle(document.head).getPropertyValue(name);
+/******/ 			}
 /******/ 			if(!data) return [];
 /******/ 			for(; cc; i++) {
 /******/ 				cc = data.charCodeAt(i);
@@ -322,7 +337,7 @@
 /******/ 								}
 /******/ 							};
 /******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
+/******/ 						}
 /******/ 					}
 /******/ 				}
 /******/ 		};

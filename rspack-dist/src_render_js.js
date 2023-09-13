@@ -1,17 +1,13 @@
 (self['webpackChunkrspack_repro'] = self['webpackChunkrspack_repro'] || []).push([["src_render_js"], {
-"./src/render.js": function (module, exports, __webpack_require__) {
-"use strict";
-Object.defineProperty(exports, "__esModule", {
-    value: true
+"./src/render.js": function (__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+'use strict';
+__webpack_require__.r(__webpack_exports__);
+__webpack_require__.d(__webpack_exports__, {
+  'render': function() { return render; }
 });
-Object.defineProperty(exports, "render", {
-    enumerable: true,
-    get: function() {
-        return render;
-    }
-});
-__webpack_require__("./src/render.css");
-function render() {
+/* harmony import */var _render_css__WEBPACK_IMPORTED_MODULE_0_ = __webpack_require__(/* ./render.css */"./src/render.css");
+
+ function render() {
     const el = document.createElement('div');
     el.classList.add('text');
     document.getElementsByTagName('body')[0].appendChild(el);
